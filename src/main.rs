@@ -1,41 +1,40 @@
-use std::collections::HashMap;
+use num::traits::{CheckedSub};
+
 
 fn main() {
-   let mut map = HashMap::new();
-   let mut interger = vec![5,5,2,4,5];
-   interger.sort();
-   
+     let mut test_vec:Vec<interger> = Vec::new();
+     for i in 10..20 {
+         test_vec.push(i as interger)
+     }
+     let ans = check_sum(9, test_vec);
+     println!("{:?}",ans)
+ }
 
-   for i in interger.iter(){
-       let count = map.entry(i).or_insert(0);
-       *count += 1
+ type interger = u64;
 
-   }
+ fn check_sum(target:interger, list:Vec<interger>) -> Vec<(interger,interger)> {
 
-   let mut interger = interger.clone();
-   interger.dedup();
+    let mut result_vec:Vec<(interger,interger)>= Vec::new();
 
-   for el in 0..interger.len(){
-      let mut val:u32 = match map.get(&interger[0]){
-           Some(num) => *num,
-           None => 0,
-       };
+     for (index, value) in list.iter().enumerate(){
+         let mut return_values = (index as interger, *value);
 
-       let mut max:u32 = match map.get(&interger[el]){
-           Some(num) => *num,
-           None => 0,
-       }; 
+         let mut remainder = target.checked_sub(return_values.1).unwrap();
 
-       if max > val {
-           val = max;
-           return println!("The value is: {} appear {} times",interger[el],val)
-       }
+         for (index_2 , value_2) in list.iter().enumerate(){
+            
 
-   }
-     
-}
+            if remainder == *value_2 && return_values.1 != *value_2 {
 
+                 let mut result_tuple = (return_values.1, remainder);
+                 
+                 result_vec.push(result_tuple);
+             }
+         }
+         
+     }
+     result_vec
+ }
 
-
-
-
+#[cfg(test)]
+ assert_eq!(check_sum(5, vec![1,2,3,4,5]), vec![(1,4),(2,3),(3,2),(4,1)]);
